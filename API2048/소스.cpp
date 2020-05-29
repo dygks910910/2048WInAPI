@@ -3,7 +3,7 @@
 #include"GameManager.h"
 #include"define.h"
 //#include<crtdbg.h>
-
+#include"CYHTime.h"
 
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 HINSTANCE g_hInst;
@@ -12,7 +12,9 @@ HDC hdc,memdc,mem2dc;
 PAINTSTRUCT ps;
 HBITMAP oldbmp,oldbmp2,hbmp,hbmpBack;
 CGameManager* gameManager; 
-int destScore = e_BITMAP_TYPE::TYPE11;
+e_BITMAP_TYPE destScore = e_BITMAP_TYPE::TYPE11;
+bool bDone = false;
+CYHTime g_timer;
 
 int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance
 	, LPSTR lpszCmdParam, int nCmdShow)
@@ -34,15 +36,43 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance
 	WndClass.lpszMenuName = MAKEINTRESOURCE(IDR_MENU1);
 	WndClass.style = CS_HREDRAW | CS_VREDRAW;
 	RegisterClass(&WndClass);
+	gameManager = new CGameManager(g_hInst);
 
 	hWnd = CreateWindow(lpszClass, lpszClass, WS_OVERLAPPEDWINDOW,
 		0, 0, name_CLIENT_SIZE::CLIENT_SIZE_WIDTH, name_CLIENT_SIZE::CLIENT_SIZE_HEIGHT,
 		NULL, (HMENU)NULL, hInstance, NULL);
 	ShowWindow(hWnd, nCmdShow);
 
-	while (GetMessage(&Message, 0, 0, 0)) {
-		TranslateMessage(&Message);
-		DispatchMessage(&Message);
+
+	/*while (GetMessage(&Message,hWnd, 0, 0))	{
+			TranslateMessage(&Message);
+			DispatchMessage(&Message);
+	}*/
+
+	bool bDone = false;
+	while (!bDone)
+	{
+		g_timer.StartTimer();
+		if(PeekMessage(&Message, NULL, 0, 0, PM_REMOVE))
+		{
+			if (Message.message == WM_QUIT)
+
+			{
+				bDone = true;
+			}
+			else
+			{
+				TranslateMessage(&Message);
+				DispatchMessage(&Message);
+			}
+		}
+		else
+		{
+			gameManager->update();
+		}
+		InvalidateRect(hWnd, NULL, false);
+		UpdateWindow(hWnd);
+		g_timer.EndTimer();
 	}
 	return Message.wParam;
 }
@@ -53,9 +83,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 	int answear = 0;
 	switch (iMessage) {
 	case WM_CREATE:
-		gameManager = new CGameManager(g_hInst);
-		hbmpBack = LoadBitmap(g_hInst, MAKEINTRESOURCE(IDB_BITMAP1));
-		SetTimer(hWnd, 1, 0, nullptr);
+		//gameManager = new CGameManager(g_hInst);
+		hbmpBack = LoadBitmap(g_hInst, MAKEINTRESOURCE(IDB_BITMAP12));
+		//SetTimer(hWnd, 1, 0, nullptr);
 		break;
 	case WM_LBUTTONDOWN:
 	case WM_LBUTTONUP:
@@ -97,8 +127,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 			break;
 		}
 	case WM_TIMER:
-		gameManager->timer();
-		InvalidateRect(hWnd, nullptr, false);
+		/*gameManager->timer();
+		InvalidateRect(hWnd, nullptr, false);*/
 		break;
 	case WM_PAINT:
 		hdc = BeginPaint(hWnd, &ps);

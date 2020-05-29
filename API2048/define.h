@@ -1,6 +1,11 @@
 #pragma once
+#include"CYHTime.h"
+extern HINSTANCE g_hInst;
+extern CYHTime g_timer;
 
-
+#define SAFE_DELETE(x){if(x!= nullptr)delete x;x= nullptr;}
+//0보다 x가 같거나 크고 y보다 작다
+#define BIGOREQUALTHANZERO_SMALLTHENY(x,y) 0 >= x && x < y
 namespace name_RECT_INFO
 {
 	const int RECT_WIDTH = 80;//사각형의 넓이.

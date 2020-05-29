@@ -52,8 +52,9 @@ void CGameManager::render(HDC hdc)
 
 void CGameManager::progress()
 {
-	makeBlock();
-	checkInBoardBlock();
+	/*if (m_pMouse->getDirection() == e_DIRECTION::STOP)
+		return;
+	checkInBoardBlock();*/
 }
 
 
@@ -70,6 +71,7 @@ void CGameManager::setMouseDirection(UINT msg, const int &mx, const int &my)//방
 		m_pMouse->setEndY(my);
 		m_pMouse->setDirection(name_CLIENT_SIZE::CLIENT_SIZE_HEIGHT, name_CLIENT_SIZE::CLIENT_SIZE_WIDTH/*m_pBoard->getRectangleArr()[3][3]->getPosition().x,
 			m_pBoard->getRectangleArr()[3][3]->getPosition().y*/);
+		
 		progress();
 		break;
 	}
@@ -77,7 +79,7 @@ void CGameManager::setMouseDirection(UINT msg, const int &mx, const int &my)//방
 
 void CGameManager::makeBlock()
 {
-	int x, y = 0;
+	/*int x, y = 0;
 	bool check = true;
 	if (m_iBlockNum > 16)
 	{
@@ -101,7 +103,7 @@ void CGameManager::makeBlock()
 
 			}
 		}
-	}
+	}*/
 
 }
 
@@ -151,190 +153,259 @@ void CGameManager::checkInBoardBlock()
 
 void CGameManager::sortFunc(const int &direction)
 {
-	CBlock* temp = nullptr;
-	switch (direction)
-	{
-	case e_DIRECTION::LEFT:
-		for (int i = 0; i < name_BLOCK_INFO::MAX_BLOCK_NUM; i++)//x작은게 앞로감.
-		{
-			for (int j = 0; j < name_BLOCK_INFO::MAX_BLOCK_NUM - 1; j++)
-			{
-				if (!checkNull(m_pBlockArr[j + 1]) && m_pBlockArr[j] != nullptr)
-					if (m_pBlockArr[j]->getPosition().x > m_pBlockArr[j + 1]->getPosition().x)
-					{
-						temp = m_pBlockArr[j];
-						m_pBlockArr[j] = m_pBlockArr[j + 1];
-						m_pBlockArr[j + 1] = temp;
-						temp;
-					}
-			}
-		}
-		break;
-	case e_DIRECTION::RIGHT:
-		for (int i = 0; i < name_BLOCK_INFO::MAX_BLOCK_NUM; i++)//x큰게 앞로감.
-		{
-			for (int j = 0; j < name_BLOCK_INFO::MAX_BLOCK_NUM - 1; j++)
-			{
-				if (!checkNull(m_pBlockArr[j + 1]) && m_pBlockArr[j] != nullptr)
-					if (m_pBlockArr[j]->getPosition().x < m_pBlockArr[j + 1]->getPosition().x)
-					{
-						temp = m_pBlockArr[j + 1];
-						m_pBlockArr[j + 1] = m_pBlockArr[j];
-						m_pBlockArr[j] = temp;
-						temp;
-					}
-			}
-		}
-		break;
-	case e_DIRECTION::DOWN:
-		for (int i = 0; i < name_BLOCK_INFO::MAX_BLOCK_NUM; i++)//x큰게 앞로감.
-		{
-			for (int j = 0; j < name_BLOCK_INFO::MAX_BLOCK_NUM - 1; j++)
-			{
-				if (!checkNull(m_pBlockArr[j + 1]) && m_pBlockArr[j] != nullptr)
-					if (m_pBlockArr[j]->getPosition().y < m_pBlockArr[j + 1]->getPosition().y)
-					{
-						temp = m_pBlockArr[j + 1];
-						m_pBlockArr[j + 1] = m_pBlockArr[j];
-						m_pBlockArr[j] = temp;
-						temp;
-					}
-			}
-		}
-		break;
-	case e_DIRECTION::UP:
-		for (int i = 0; i < name_BLOCK_INFO::MAX_BLOCK_NUM; i++)//x작은게 앞로감.
-		{
-			for (int j = 0; j < name_BLOCK_INFO::MAX_BLOCK_NUM - 1; j++)
-			{
-				if (!checkNull(m_pBlockArr[j + 1]) && m_pBlockArr[j] != nullptr)
-					if (m_pBlockArr[j]->getPosition().y > m_pBlockArr[j + 1]->getPosition().y)
-					{
-						temp = m_pBlockArr[j];
-						m_pBlockArr[j] = m_pBlockArr[j + 1];
-						m_pBlockArr[j + 1] = temp;
-						temp;
-					}
-			}
-		}
-		break;
-	}
+	//CBlock* temp = nullptr;
+	//switch (direction)
+	//{
+	//case e_DIRECTION::LEFT:
+	//	for (int i = 0; i < name_BLOCK_INFO::MAX_BLOCK_NUM; i++)//x작은게 앞로감.
+	//	{
+	//		for (int j = 0; j < name_BLOCK_INFO::MAX_BLOCK_NUM - 1; j++)
+	//		{
+	//			if (!checkNull(m_pBlockArr[j + 1]) && m_pBlockArr[j] != nullptr)
+	//				if (m_pBlockArr[j]->getPosition().x > m_pBlockArr[j + 1]->getPosition().x)
+	//				{
+	//					temp = m_pBlockArr[j];
+	//					m_pBlockArr[j] = m_pBlockArr[j + 1];
+	//					m_pBlockArr[j + 1] = temp;
+	//					temp;
+	//				}
+	//		}
+	//	}
+	//	break;
+	//case e_DIRECTION::RIGHT:
+	//	for (int i = 0; i < name_BLOCK_INFO::MAX_BLOCK_NUM; i++)//x큰게 앞로감.
+	//	{
+	//		for (int j = 0; j < name_BLOCK_INFO::MAX_BLOCK_NUM - 1; j++)
+	//		{
+	//			if (!checkNull(m_pBlockArr[j + 1]) && m_pBlockArr[j] != nullptr)
+	//				if (m_pBlockArr[j]->getPosition().x < m_pBlockArr[j + 1]->getPosition().x)
+	//				{
+	//					temp = m_pBlockArr[j + 1];
+	//					m_pBlockArr[j + 1] = m_pBlockArr[j];
+	//					m_pBlockArr[j] = temp;
+	//					temp;
+	//				}
+	//		}
+	//	}
+	//	break;
+	//case e_DIRECTION::DOWN:
+	//	for (int i = 0; i < name_BLOCK_INFO::MAX_BLOCK_NUM; i++)//x큰게 앞로감.
+	//	{
+	//		for (int j = 0; j < name_BLOCK_INFO::MAX_BLOCK_NUM - 1; j++)
+	//		{
+	//			if (!checkNull(m_pBlockArr[j + 1]) && m_pBlockArr[j] != nullptr)
+	//				if (m_pBlockArr[j]->getPosition().y < m_pBlockArr[j + 1]->getPosition().y)
+	//				{
+	//					temp = m_pBlockArr[j + 1];
+	//					m_pBlockArr[j + 1] = m_pBlockArr[j];
+	//					m_pBlockArr[j] = temp;
+	//					temp;
+	//				}
+	//		}
+	//	}
+	//	break;
+	//case e_DIRECTION::UP:
+	//	for (int i = 0; i < name_BLOCK_INFO::MAX_BLOCK_NUM; i++)//x작은게 앞로감.
+	//	{
+	//		for (int j = 0; j < name_BLOCK_INFO::MAX_BLOCK_NUM - 1; j++)
+	//		{
+	//			if (!checkNull(m_pBlockArr[j + 1]) && m_pBlockArr[j] != nullptr)
+	//				if (m_pBlockArr[j]->getPosition().y > m_pBlockArr[j + 1]->getPosition().y)
+	//				{
+	//					temp = m_pBlockArr[j];
+	//					m_pBlockArr[j] = m_pBlockArr[j + 1];
+	//					m_pBlockArr[j + 1] = temp;
+	//					temp;
+	//				}
+	//		}
+	//	}
+	//	break;
+	//}
 }
 
 void CGameManager::move()
 {
-	int y, x = 0;
-	for (int i = 0; i < name_BLOCK_INFO::MAX_BLOCK_NUM; i++)
-	{
-		if (!checkNull(m_pBlockArr[i]))
-		{
-			y = m_pBlockArr[i]->getIndexInfo().y;
-			x = m_pBlockArr[i]->getIndexInfo().x;
-			switch (m_pMouse->getDirection())
-			{
-			case e_DIRECTION::RIGHT:
-				if (y < name_BOARD_ARR_INFO::BOARD_INDEX_X && x < name_BOARD_ARR_INFO::BOARD_INDEX_Y && x + 1 != name_BOARD_ARR_INFO::BOARD_INDEX_X&&m_pBlockArr[i] != nullptr)
-					if (!(m_pBoard->getRectangleArr()[y][x + 1]->getCheckBlock()))
-					{
-						m_pBlockArr[i]->move(m_pMouse->getDirection(), m_pBoard->getRectangleArr()[y][x + 1]->getPosition());
-					}
-					else if (m_pBoard->getRectangleArr()[y][x + 1]->getCheckBlock() && m_pBoard->getRectangleArr()[y][x + 1]->getBlockAddr()->getBitmapType() == m_pBlockArr[i]->getBitmapType())
-					{
-						m_pBlockArr[i]->move(m_pMouse->getDirection(), m_pBoard->getRectangleArr()[y][x + 1]->getPosition());
-						delete m_pBlockArr[i];
-						m_iBlockNum--;
-						m_pBlockArr[i] = nullptr;
-						m_pBoard->getRectangleArr()[y][x + 1]->getBlockAddr()->setBitmapType(m_pBoard->getRectangleArr()[y][x + 1]->getBlockAddr()->getBitmapType() + 1);
-						break;
-					}
-				break;
-			case e_DIRECTION::LEFT:
-				if (y >= 0 && x >= 0 && x - 1 >= 0 && m_pBlockArr[i] != nullptr)
-					if (!(m_pBoard->getRectangleArr()[y][x - 1]->getCheckBlock()))
-					{
-						m_pBlockArr[i]->move(m_pMouse->getDirection(), m_pBoard->getRectangleArr()[y][x - 1]->getPosition());
-					}
-					else if (m_pBoard->getRectangleArr()[y][x - 1]->getCheckBlock() && m_pBoard->getRectangleArr()[y][x - 1]->getBlockAddr()->getBitmapType() == m_pBlockArr[i]->getBitmapType())
-					{
-						m_pBlockArr[i]->move(m_pMouse->getDirection(), m_pBoard->getRectangleArr()[y][x - 1]->getPosition());
-						delete m_pBlockArr[i];
-						m_iBlockNum--;
-						m_pBlockArr[i] = nullptr;
-						m_pBoard->getRectangleArr()[y][x - 1]->getBlockAddr()->setBitmapType(m_pBoard->getRectangleArr()[y][x - 1]->getBlockAddr()->getBitmapType() + 1);
-						break;
-					}
-				break;
-			case e_DIRECTION::DOWN:
-				if (y < name_BOARD_ARR_INFO::BOARD_INDEX_Y && x < name_BOARD_ARR_INFO::BOARD_INDEX_X && y + 1 != name_BOARD_ARR_INFO::BOARD_INDEX_Y&&m_pBlockArr[i] != nullptr)
-					if (!(m_pBoard->getRectangleArr()[y + 1][x]->getCheckBlock()))
-					{
-						m_pBlockArr[i]->move(m_pMouse->getDirection(), m_pBoard->getRectangleArr()[y + 1][x]->getPosition());
-					}
-					else if (m_pBoard->getRectangleArr()[y + 1][x]->getCheckBlock() && m_pBoard->getRectangleArr()[y + 1][x]->getBlockAddr()->getBitmapType() == m_pBlockArr[i]->getBitmapType())
-					{
-						m_pBlockArr[i]->move(m_pMouse->getDirection(), m_pBoard->getRectangleArr()[y + 1][x]->getPosition());
-						delete m_pBlockArr[i];
-						m_iBlockNum--;
-						m_pBlockArr[i] = nullptr;
-						m_pBoard->getRectangleArr()[y + 1][x]->getBlockAddr()->setBitmapType(m_pBoard->getRectangleArr()[y + 1][x]->getBlockAddr()->getBitmapType() + 1);
-						break;
-					}
-				break;
-			case e_DIRECTION::UP:
-				if (y >= 0 && x >= 0 && y - 1 >= 0)
-					if (!(m_pBoard->getRectangleArr()[y - 1][x]->getCheckBlock()) && m_pBlockArr[i] != nullptr)
-					{
-						m_pBlockArr[i]->move(m_pMouse->getDirection(), m_pBoard->getRectangleArr()[y - 1][x]->getPosition());
-					}
-					else if (m_pBoard->getRectangleArr()[y - 1][x]->getCheckBlock() && m_pBoard->getRectangleArr()[y - 1][x]->getBlockAddr()->getBitmapType() == m_pBlockArr[i]->getBitmapType())
-					{
-						m_pBlockArr[i]->move(m_pMouse->getDirection(), m_pBoard->getRectangleArr()[y - 1][x]->getPosition());
-						delete m_pBlockArr[i];
-						m_iBlockNum--;
-						m_pBlockArr[i] = nullptr;
-						m_pBoard->getRectangleArr()[y - 1][x]->getBlockAddr()->setBitmapType(m_pBoard->getRectangleArr()[y - 1][x]->getBlockAddr()->getBitmapType() + 1);
-						break;
-					}
-				break;
-			}
-		}
-	}
+	//int y, x = 0;
+	//m_bBlockIsMoving = false;
+	//for (int i = 0; i < name_BLOCK_INFO::MAX_BLOCK_NUM; i++)
+	//{
+	//	if (!checkNull(m_pBlockArr[i]))
+	//	{
+	//		y = m_pBlockArr[i]->getIndexInfo().y;
+	//		x = m_pBlockArr[i]->getIndexInfo().x;
+	//		switch (m_pMouse->getDirection())
+	//		{
+	//		case e_DIRECTION::RIGHT:
+	//			if (y < name_BOARD_ARR_INFO::BOARD_INDEX_X
+	//				&& x < name_BOARD_ARR_INFO::BOARD_INDEX_Y
+	//				&& x + 1 != name_BOARD_ARR_INFO::BOARD_INDEX_X
+	//				&& m_pBlockArr[i] != nullptr)
+	//			{
+	//				//블럭이 있는곳 탐색.
+	//				int blockPosX = 3;
+	//				for (int idx = 1; idx < 4-x; ++idx)
+	//				{
+	//					if (m_pBoard->getRectangleArr()[y][x + idx]->getCheckBlock())
+	//						blockPosX = x + idx;
+	//				}
+	//				if (!(m_pBoard->getRectangleArr()[y][blockPosX]->getCheckBlock()))//블럭이 없으면
+	//				{
+	//					m_pBlockArr[i]->move(m_pMouse->getDirection(), m_pBoard->getRectangleArr()[y][blockPosX]->getPosition());
+	//					//m_pBlockArr[i]->setIsMoving(true);
+	//				}
+	//				//블럭이 있고 같은 타입이면?
+	//				else if (m_pBoard->getRectangleArr()[y][blockPosX]->getCheckBlock()
+	//					&& m_pBoard->getRectangleArr()[y][blockPosX]->getBlockAddr()->getBitmapType() == m_pBlockArr[i]->getBitmapType())
+	//				{
+	//					m_pBlockArr[i]->move(m_pMouse->getDirection(), m_pBoard->getRectangleArr()[y][blockPosX]->getPosition());
+	//					/*delete m_pBlockArr[i];
+	//					m_iBlockNum--;
+	//					m_pBlockArr[i] = nullptr;
+	//					m_pBoard->getRectangleArr()[y][blockPosX]->getBlockAddr()->setBitmapType(m_pBoard->getRectangleArr()[y][blockPosX]->getBlockAddr()->getBitmapType() + 1);*/
+	//					break;
+	//				}
+
+	//			}
+	//			else
+	//			{
+	//				//m_pBlockArr[i]->setIsMoving(false);
+	//			}
+	//			m_bBlockIsMoving |= m_pBlockArr[i]->getisMoving();
+	//			break;
+	//		case e_DIRECTION::LEFT:
+	//			if (y >= 0
+	//				&& x >= 0
+	//				&& x - 1 >= 0
+	//				&& m_pBlockArr[i] != nullptr)
+	//			{
+	//				int blockPosX = 0;
+	//				for (int idx = 1; idx >= 0 && idx <= x; ++idx)
+	//				{
+	//					if (m_pBoard->getRectangleArr()[y][x - idx]->getCheckBlock())
+	//						blockPosX = x - idx;
+	//				}
+
+	//				if (!(m_pBoard->getRectangleArr()[y][blockPosX]->getCheckBlock()))
+	//				{
+	//					m_pBlockArr[i]->move(m_pMouse->getDirection(), m_pBoard->getRectangleArr()[y][blockPosX]->getPosition());
+	//					//m_pBlockArr[i]->setIsMoving(true);
+	//				}
+	//				else if (m_pBoard->getRectangleArr()[y][blockPosX]->getCheckBlock() && m_pBoard->getRectangleArr()[y][blockPosX]->getBlockAddr()->getBitmapType() == m_pBlockArr[i]->getBitmapType())
+	//				{
+	//					m_pBlockArr[i]->move(m_pMouse->getDirection(), m_pBoard->getRectangleArr()[y][blockPosX]->getPosition());
+	//					/*delete m_pBlockArr[i];
+	//					m_iBlockNum--;
+	//					m_pBlockArr[i] = nullptr;
+	//					m_pBoard->getRectangleArr()[y][blockPosX]->getBlockAddr()->setBitmapType(m_pBoard->getRectangleArr()[y][blockPosX]->getBlockAddr()->getBitmapType() + 1);*/
+	//					break;
+	//				}
+	//			}
+	//			else
+	//			{
+	//				//m_pBlockArr[i]->setIsMoving(false);
+	//			}
+	//			m_bBlockIsMoving |= m_pBlockArr[i]->getisMoving();
+	//			break;
+	//		case e_DIRECTION::DOWN:
+	//			if (y < name_BOARD_ARR_INFO::BOARD_INDEX_Y
+	//				&& x < name_BOARD_ARR_INFO::BOARD_INDEX_X
+	//				&& y + 1 != name_BOARD_ARR_INFO::BOARD_INDEX_Y && m_pBlockArr[i] != nullptr)
+	//			{
+	//				if (!(m_pBoard->getRectangleArr()[y + 1][x]->getCheckBlock()))
+	//				{
+	//					m_pBlockArr[i]->move(m_pMouse->getDirection(), m_pBoard->getRectangleArr()[y + 1][x]->getPosition());
+	//					//m_pBlockArr[i]->setIsMoving(true);
+	//				}
+	//				else if (m_pBoard->getRectangleArr()[y + 1][x]->getCheckBlock()
+	//					&& m_pBoard->getRectangleArr()[y + 1][x]->getBlockAddr()->getBitmapType() == m_pBlockArr[i]->getBitmapType())
+	//				{
+	//					m_pBlockArr[i]->move(m_pMouse->getDirection(), m_pBoard->getRectangleArr()[y + 1][x]->getPosition());
+	//					delete m_pBlockArr[i];
+	//					m_iBlockNum--;
+	//					m_pBlockArr[i] = nullptr;
+	//					//m_pBoard->getRectangleArr()[y + 1][x]->getBlockAddr()->setBitmapType(m_pBoard->getRectangleArr()[y + 1][x]->getBlockAddr()->getBitmapType() + 1);
+	//					break;
+	//				}
+	//			}
+	//			else
+	//			{
+	//				//m_pBlockArr[i]->setIsMoving(false);
+	//			}
+	//			m_bBlockIsMoving |= m_pBlockArr[i]->getisMoving();
+	//			break;
+	//		case e_DIRECTION::UP:
+	//			if (y >= 0 && x >= 0 && y - 1 >= 0)
+	//			{
+	//				if (!(m_pBoard->getRectangleArr()[y - 1][x]->getCheckBlock())
+	//					&& m_pBlockArr[i] != nullptr)
+	//				{
+	//					//m_pBlockArr[i]->setIsMoving(true);
+	//					m_pBlockArr[i]->move(m_pMouse->getDirection(), m_pBoard->getRectangleArr()[y - 1][x]->getPosition());
+	//				}
+	//				else if (m_pBoard->getRectangleArr()[y - 1][x]->getCheckBlock() && m_pBoard->getRectangleArr()[y - 1][x]->getBlockAddr()->getBitmapType() == m_pBlockArr[i]->getBitmapType())
+	//				{
+	//					m_pBlockArr[i]->move(m_pMouse->getDirection(), m_pBoard->getRectangleArr()[y - 1][x]->getPosition());
+	//					delete m_pBlockArr[i];
+	//					m_iBlockNum--;
+	//					m_pBlockArr[i] = nullptr;
+	//					//m_pBoard->getRectangleArr()[y - 1][x]->getBlockAddr()->setBitmapType(m_pBoard->getRectangleArr()[y - 1][x]->getBlockAddr()->getBitmapType() + 1);
+	//					break;
+	//				}
+	//			}
+	//			else
+	//			{
+	//				//m_pBlockArr[i]->setIsMoving(false);
+	//			}
+	//			m_bBlockIsMoving |= m_pBlockArr[i]->getisMoving();
+	//			break;
+	//		}
+	//	}
+	//}
+	//if (!m_bBlockIsMoving)
+	//{
+	//	m_pMouse->setDIrec(e_DIRECTION::STOP);
+	//}
 }
 
 
-void CGameManager::timer()
+void CGameManager::update()
 {
-
-	switch (m_pMouse->getDirection())
+	/*if (m_pMouse->getDirection() != e_DIRECTION::STOP) {
+		m_bBlockIsMoving = true;*/
+		switch (m_pMouse->getDirection())
+		{
+		case e_DIRECTION::RIGHT:
+			//sortFunc(e_DIRECTION::RIGHT);
+			move();
+			break;
+		case e_DIRECTION::LEFT:
+			//sortFunc(e_DIRECTION::LEFT);
+			move();
+			break;
+		case e_DIRECTION::DOWN:
+			//sortFunc(e_DIRECTION::DOWN);
+			move();
+			break;
+		case e_DIRECTION::UP:
+			//sortFunc(e_DIRECTION::UP);
+			move();
+			break;
+		case e_DIRECTION::STOP:
+			break;
+		}
+		//checkInBoardBlock();
+	/*}
+	else
 	{
-	case e_DIRECTION::RIGHT:
-		sortFunc(e_DIRECTION::RIGHT);
-		move();
-		break;
-	case e_DIRECTION::LEFT:
-		sortFunc(e_DIRECTION::LEFT);
-		move();
-		break;
-	case e_DIRECTION::DOWN:
-		sortFunc(e_DIRECTION::DOWN);
-		move();
-		break;
-	case e_DIRECTION::UP:
-		sortFunc(e_DIRECTION::UP);
-		move();
-		break;
-	case e_DIRECTION::STOP:
-		break;
-	}
-
-	checkInBoardBlock();
+		m_bBlockIsMoving = false;
+	}*/
 
 
 }
 
 void CGameManager::FindHighType()
 {
-	int temp = e_BITMAP_TYPE::TYPE1;
+	e_BITMAP_TYPE temp = e_BITMAP_TYPE::TYPE1;
 	for (int i = 0; i < name_BLOCK_INFO::MAX_BLOCK_NUM; i++)
 	{
 		if (!checkNull(m_pBlockArr[i]))

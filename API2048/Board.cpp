@@ -8,7 +8,7 @@ CBoard::CBoard()
 	{
 		for (int j = 0; j < name_BOARD_ARR_INFO::BOARD_INDEX_X; j++)
 		{
-			POINT poTemp;
+			CVector2 poTemp;
 			poTemp.x = j*name_RECT_INFO::RECT_WIDTH + name_RECT_INFO::RECT_WIDTH;
 			poTemp.y = i*name_RECT_INFO::RECT_WIDTH + name_RECT_INFO::RECT_WIDTH;
 			m_RectangleArr[i][j] = new CRectangle(poTemp);

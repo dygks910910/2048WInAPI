@@ -15,7 +15,7 @@ private:
 	int m_iEndX;
 	int m_iStartY;
 	int m_iEndY;
-	int m_iDirection;
+	e_DIRECTION m_iDirection;
 
 	bool m_bDirectionReady;
 public:
@@ -24,13 +24,13 @@ public:
 	int getStartY(){ return m_iStartY; };
 	int getEndX(){ return m_iEndX;};
 	int getEndY(){ return m_iEndY; };
-	int getDirection(){ return m_iDirection; }
+	e_DIRECTION getDirection(){ return m_iDirection; }
 public:
 	//setter
 	void setStartX(const int &x){ m_iStartX = x; };
 	void setStartY(const int &y){ m_iStartY = y; };
 	void setEndX(const int &x){ m_iEndX = x; };
 	void setEndY(const int &y){ m_iEndY = y; };
-	void setDIrec(const int &direction){ m_iDirection = direction; }
+	void setDIrec(const e_DIRECTION &direction){ m_iDirection = direction; }
 };
 

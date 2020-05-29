@@ -1,6 +1,6 @@
 #pragma once
 
-enum e_DIRECTION
+enum class e_DIRECTION
 {
 	LEFT,
 	RIGHT,
@@ -9,7 +9,7 @@ enum e_DIRECTION
 	STOP
 };
 
-enum e_BITMAP_TYPE
+enum class e_BITMAP_TYPE
 {
 	TYPE1,
 	TYPE2,

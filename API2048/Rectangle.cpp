@@ -1,7 +1,7 @@
 #include "Rectangle.h"
 
 
-CRectangle::CRectangle(const POINT &position)
+CRectangle::CRectangle(const CVector2&position)
 	:m_poPosition(position), m_iWidth(name_RECT_INFO::RECT_WIDTH), m_bCheckBlock(false)
 {
 	m_pBlock = nullptr;
