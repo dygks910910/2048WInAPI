@@ -2,7 +2,7 @@
 #include"resource.h"
 #include"GameManager.h"
 #include"define.h"
-//#include<crtdbg.h>
+#include<crtdbg.h>
 #include"CYHTime.h"
 
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
@@ -14,8 +14,8 @@ HBITMAP oldbmp,oldbmp2,hbmp,hbmpBack;
 CGameManager* gameManager; 
 e_BITMAP_TYPE destScore = e_BITMAP_TYPE::TYPE11;
 bool bDone = false;
-CYHTime g_timer;
-
+CYHTime* g_timer;
+double g_dElapsedTime = 0;
 int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance
 	, LPSTR lpszCmdParam, int nCmdShow)
 {
@@ -36,7 +36,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance
 	WndClass.lpszMenuName = MAKEINTRESOURCE(IDR_MENU1);
 	WndClass.style = CS_HREDRAW | CS_VREDRAW;
 	RegisterClass(&WndClass);
-	gameManager = new CGameManager(g_hInst);
+	gameManager = new CGameManager();
 
 	hWnd = CreateWindow(lpszClass, lpszClass, WS_OVERLAPPEDWINDOW,
 		0, 0, name_CLIENT_SIZE::CLIENT_SIZE_WIDTH, name_CLIENT_SIZE::CLIENT_SIZE_HEIGHT,
@@ -49,16 +49,19 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance
 			DispatchMessage(&Message);
 	}*/
 
+	g_timer = new CYHTime;
 	bool bDone = false;
 	while (!bDone)
 	{
-		g_timer.StartTimer();
-		if(PeekMessage(&Message, NULL, 0, 0, PM_REMOVE))
+		g_timer->StartTimer();
+		if(PeekMessage(&Message, hWnd, 0, 0, PM_REMOVE))
 		{
 			if (Message.message == WM_QUIT)
 
 			{
 				bDone = true;
+				delete gameManager;
+
 			}
 			else
 			{
@@ -72,9 +75,10 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance
 		}
 		InvalidateRect(hWnd, NULL, false);
 		UpdateWindow(hWnd);
-		g_timer.EndTimer();
+		g_timer->EndTimer();
+		g_dElapsedTime += g_timer->GetDeltaTime();
 	}
-	return Message.wParam;
+	//return Message.wParam;
 }
 
 
@@ -103,14 +107,15 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 		{
 		case ID_GAME_NEWGAME:
 			delete gameManager;
-			gameManager = new CGameManager(g_hInst);
+			gameManager = new CGameManager();
 			break;
 		case ID_GAME_EXIT:
 			answear = MessageBox(hWnd, "종료하시겠습니까?", "종료", MB_OKCANCEL);
 			if (answear == IDOK)
 			{
-				delete gameManager;
 				PostQuitMessage(0);
+				delete gameManager;
+
 			}
 			break;
 		case ID_DESTINATION_256:
@@ -156,13 +161,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 		DeleteDC(memdc);
 		
 		EndPaint(hWnd, &ps);
-		gameManager->FindHighType();
-		
-
 		break;
 	case WM_DESTROY:
-		delete gameManager;
-		//_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+		_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 		PostQuitMessage(0);
 		return 0;
 	}

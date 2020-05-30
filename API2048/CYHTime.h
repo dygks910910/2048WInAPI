@@ -6,7 +6,7 @@ public:
 	CYHTime();
 	~CYHTime();
 	void StartTimer();
-	std::chrono::duration<double> GetDeltaTime();
+	double GetDeltaTime();
 
 	void EndTimer();
 

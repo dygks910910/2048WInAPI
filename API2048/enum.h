@@ -24,3 +24,9 @@ enum class e_BITMAP_TYPE
 	TYPE11,
 
 };
+enum class e_Event
+{
+	BLOCK_STOP,
+	BLOCK_MOVE,
+	BMP_LEVELUP,
+};

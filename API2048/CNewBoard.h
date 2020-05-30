@@ -3,30 +3,40 @@
 #include<Windows.h>
 #include"Rectangle.h"
 #include"CNewBlock.h"
-enum {
-	a,b,c,d,e
+#include"CYHObserver.h"
+
+
+struct ChangeBlockInfo
+{
+	int row =-1, col =-1;
+	bool isSameBitmap;
 };
-class CNewBoard
+class CNewBoard : public CSubJect
 {
 public:
 	CNewBoard();
 	~CNewBoard();
 
 	void Render(HDC hdc);
-	void Update();
+	void Update(e_DIRECTION eDir);
 	bool CheckBlockByIdx(int x, int y);
 	bool CalcBlockMove(e_DIRECTION dir);
 	bool MakeBlock();
+	bool CheckAllBlockStop();
+	void ChangedMouseState(e_Event event) { Notify(event); }
 	//void BlockMoveTo(int x, int y, CVector2 pos);
 private:
 	//아래 두 배열은 서로 의존관계.
 	std::vector<CRectangle*> m_vecRectBoard;
 	std::vector<CNewBlock*> m_vecBlockList;
 private:
-	bool MovePossible(int row, int col, OUT int& rowOut, OUT int& colOut, e_DIRECTION eDir,OUT bool &bSameBmpType);
+	bool MovePossible(int row, int col, e_DIRECTION eDir, OUT ChangeBlockInfo& info);
 	bool EqualBitmapType(CNewBlock* blc1, CNewBlock* blc2);
 	template<class T>
 	void Swap(T a, T b);
+
+
+	// CYHObserver을(를) 통해 상속됨
 
 };
 

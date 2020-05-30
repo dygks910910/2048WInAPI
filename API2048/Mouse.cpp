@@ -41,4 +41,5 @@ void CMouse::setDirection(const int &DestRight, const int &DestBotoom)
 		m_iDirection = e_DIRECTION::LEFT;
 	else
 		m_iDirection = e_DIRECTION::STOP;
+
 }

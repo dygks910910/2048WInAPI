@@ -1,21 +1,23 @@
 #include "CNewBoard.h"
 CNewBoard::CNewBoard()
 {
-	m_vecRectBoard.reserve(16);
-	m_vecBlockList.reserve(16);
+	m_vecRectBoard.resize(16);
+	m_vecBlockList.resize(16);
 	CVector2 poTemp;
-	for (int i = 0; i < name_BOARD_ARR_INFO::BOARD_INDEX_X; i++)
+	for (int iCol = 0; iCol < BD_INFO::BOARD_INDEX_X; iCol++)
 	{
-		for (int j = 0; j < name_BOARD_ARR_INFO::BOARD_INDEX_Y; j++)
+		for (int iRaw = 0; iRaw < BD_INFO::MAXY; iRaw++)
 		{
-			poTemp.x = j * name_RECT_INFO::RECT_WIDTH + name_RECT_INFO::RECT_WIDTH;
-			poTemp.y = i * name_RECT_INFO::RECT_WIDTH + name_RECT_INFO::RECT_WIDTH;
-			m_vecRectBoard[i+j*4] = new CRectangle(poTemp);
+			poTemp.x = iRaw * name_RECT_INFO::RECT_WIDTH + name_RECT_INFO::RECT_WIDTH;
+			poTemp.y = iCol * name_RECT_INFO::RECT_WIDTH + name_RECT_INFO::RECT_WIDTH;
+			m_vecRectBoard[iRaw+ iCol *4] = new CRectangle(poTemp);
 		}
 	}
 
-}
+	MakeBlock();
+	MakeBlock();
 
+}
 CNewBoard::~CNewBoard()
 {
 	for (int i = 0; i < m_vecRectBoard.size(); ++i)
@@ -26,13 +28,13 @@ CNewBoard::~CNewBoard()
 	{
 		SAFE_DELETE(m_vecBlockList[i]);
 	}
+	CNewBlock::DeleteBmpFile();
 }
 
 void CNewBoard::Render(HDC hdc)
 {
 	for (int i = 0; i < m_vecRectBoard.size(); ++i)
 	{
-		if (m_vecRectBoard[i] != nullptr)
 			m_vecRectBoard[i]->render(hdc);
 	}
 	for (int i = 0; i < m_vecBlockList.size(); ++i)
@@ -41,90 +43,223 @@ void CNewBoard::Render(HDC hdc)
 			m_vecBlockList[i]->Render(hdc);
 	}
 	RECT a, b;
-	for (int i = 0; i < 4; ++i)
+	for (int iCol = 0; iCol < 4; ++iCol)
 	{
-		for (int j = 0; j < 4; ++j)
+		for (int iRow = 0; iRow < 4; ++iRow)
 		{
-			a.left = 500 + i *10;
-			a.top = 100;
-			a.right = a.left + 10;
-			a.top = a.top + 10;
+			a.left = 400 + iRow *15;
+			a.top = 100 + iCol * 15;
 
-			b.left = 700 + i*10;
-			b.top = 100;
-			b.right = b.left + 10;
-			b.top = b.top + 10;
+			b.left = 400 + iRow * 15;
+			b.top = 300 + iCol * 15;
 
-			TextOut(hdc, a.left, a.top, m_vecBlockList[i + j * 4] == nullptr ? "0" : "1", 2);
-			TextOut(hdc, b.left, b.top, m_vecBlockList[i + j * 4] == nullptr ? "0" : "1", 2);
+			TextOut(hdc, a.left, a.top, m_vecBlockList[iRow + iCol * 4] == nullptr ? "0" : "1", 1);
+			TextOut(hdc, b.left, b.top, m_vecRectBoard[iRow + iCol * 4] == nullptr ? "0" : "1", 1);
 
 		}
 	}
 }
 
-void CNewBoard::Update()
+void CNewBoard::Update(e_DIRECTION eDir)
 {
-	
+	//CalcBlockMove(eDir);
+	//Notify(e_Event::BLOCK_MOVE);
 	for (int i = 0; i < m_vecBlockList.size(); ++i)
 	{
 		if (m_vecBlockList[i] != nullptr)
 			m_vecBlockList[i]->Update();
 	}
+	
 }
 
 bool CNewBoard::CheckBlockByIdx(int x, int y)
 {
-	if (x < name_BOARD_ARR_INFO::BOARD_INDEX_X ||
-		y < name_BOARD_ARR_INFO::BOARD_INDEX_Y ||
-		x > 0 ||
-		y > 0)
-		return false;
-	return m_vecRectBoard[x + y * 4]->getCheckBlock();
+	return m_vecBlockList[x + y * 4]!= nullptr;
 }
 bool CNewBoard::CalcBlockMove(e_DIRECTION dir)
 {
-	int rowOut = 0, colOut = 0;
-	bool bSameBmpType;
+	bool bSameBmpType =false;
+	ChangeBlockInfo info;
+	ZeroMemory(&info, sizeof(info));
 	switch (dir)
 	{
 	case e_DIRECTION::LEFT:
 	{
-		for (int col = 0; col < name_BOARD_ARR_INFO::BOARD_INDEX_Y; ++col)
+		for (int col = 0; col < BD_INFO::MAXY; ++col)
 		{
 			//1열부터 먼저 계산.
-			for (int row = 1; row < name_BOARD_ARR_INFO::BOARD_INDEX_X; ++row)
+			for (int row = 0; row < BD_INFO::BOARD_INDEX_X; ++row)
 			{
-				if (MovePossible(row, col, rowOut, colOut, dir, bSameBmpType))
+				ZeroMemory(&info, sizeof(info));
+				if (MovePossible(row, col, dir, info))
 				{
-					auto pTmp = m_vecBlockList[rowOut + colOut * name_BOARD_ARR_INFO::BOARD_INDEX_Y];
-					pTmp->SetMotherRect(*m_vecRectBoard[rowOut + colOut * name_BOARD_ARR_INFO::BOARD_INDEX_Y]);
-					
+					if (info.isSameBitmap)
+					{
+						//메모리 해제해주기.
+						m_vecBlockList[row + col * BD_INFO::MAXY]->SetIsFusioned(true);
+						removeObserver(m_vecBlockList[info.row + info.col * BD_INFO::MAXY]);
+						SAFE_DELETE(m_vecBlockList[info.row + info.col * BD_INFO::MAXY]);
+						
+						//비트맵 바꿔주기
+						int iBmpType = static_cast<int>(m_vecBlockList[row+ col* BD_INFO::MAXY]->GetBitmapType());
+						e_BITMAP_TYPE eType = static_cast<e_BITMAP_TYPE>(iBmpType += 1);
+						m_vecBlockList[row + col * BD_INFO::MAXY]->SetBitmapType(eType);
+						
+						
+						//백보드 Rect세팅
+						m_vecBlockList[row + col * BD_INFO::MAXY]->SetMotherRect(
+							*m_vecRectBoard[info.row + info.col * BD_INFO::MAXY]
+						);
+						//보드판 정리.
+						auto pTmp = m_vecBlockList[row + col * BD_INFO::MAXY];
+						m_vecBlockList[info.row + info.col * BD_INFO::MAXY] = pTmp;
+						m_vecBlockList[row + col * BD_INFO::MAXY] = nullptr;
+					}
+					else
+					{
+						auto pTmp = m_vecBlockList[row + col * BD_INFO::MAXY];
+						pTmp->SetMotherRect(*m_vecRectBoard[info.row + info.col * BD_INFO::MAXY]);
+						m_vecBlockList[info.row + info.col * BD_INFO::MAXY] = pTmp;
+						m_vecBlockList[row + col * BD_INFO::MAXY] = nullptr;
+						//return true;
+					}
 				}
 			}
 		}
 	}
 		break;
 	case e_DIRECTION::RIGHT:
-		for (int col = 0; col < name_BOARD_ARR_INFO::BOARD_INDEX_Y; ++col)
+		for (int col = BD_INFO::BOARD_INDEX_X - 1; col >= 0; --col)
 		{
 			//4열부터 먼저 계산
-			for (int row = name_BOARD_ARR_INFO::BOARD_INDEX_X-1; row >= 0 ; --row)
+			for (int row = BD_INFO::BOARD_INDEX_X-1; row >= 0 ; --row)
 			{
-				if (MovePossible(row, col, rowOut, colOut, dir, bSameBmpType))
+				ZeroMemory(&info, sizeof(info));
+				if (MovePossible(row, col, dir, info))
 				{
-					m_vecBlockList[rowOut + colOut * name_BOARD_ARR_INFO::BOARD_INDEX_Y]->SetMotherRect(
-						*m_vecRectBoard[rowOut + colOut * name_BOARD_ARR_INFO::BOARD_INDEX_Y]
-					);
+					if (info.isSameBitmap)
+					{
+						//메모리 해제해주기.
+						m_vecBlockList[row + col * BD_INFO::MAXY]->SetIsFusioned(true);
+						removeObserver(m_vecBlockList[info.row + info.col * BD_INFO::MAXY]);
+						SAFE_DELETE(m_vecBlockList[info.row + info.col * BD_INFO::MAXY]);
+
+						//비트맵 바꿔주기
+						int iBmpType = static_cast<int>(m_vecBlockList[row + col * BD_INFO::MAXY]->GetBitmapType());
+						e_BITMAP_TYPE eType = static_cast<e_BITMAP_TYPE>(iBmpType += 1);
+						m_vecBlockList[row + col * BD_INFO::MAXY]->SetBitmapType(eType);
+
+
+						//백보드 Rect세팅
+						m_vecBlockList[row + col * BD_INFO::MAXY]->SetMotherRect(
+							*m_vecRectBoard[info.row + info.col * BD_INFO::MAXY]
+						);
+						//보드판 정리.
+						auto pTmp = m_vecBlockList[row + col * BD_INFO::MAXY];
+						m_vecBlockList[info.row + info.col * BD_INFO::MAXY] = pTmp;
+						m_vecBlockList[row + col * BD_INFO::MAXY] = nullptr;
+					}
+					else
+					{
+						auto pTmp = m_vecBlockList[row + col * BD_INFO::MAXY];
+						pTmp->SetMotherRect(*m_vecRectBoard[info.row + info.col * BD_INFO::MAXY]);
+						m_vecBlockList[info.row + info.col * BD_INFO::MAXY] = pTmp;
+						m_vecBlockList[row + col * BD_INFO::MAXY] = nullptr;
+						//return true;
+					}
 
 				}
+				
 			}
 		}
 		break;
 	case e_DIRECTION::UP:
-		//1행부터 먼저 계산
+		for (int col = 0; col < BD_INFO::MAXY; ++col)
+		{
+			//1열부터 먼저 계산.
+			for (int row = 0; row < BD_INFO::BOARD_INDEX_X; ++row)
+			{
+				ZeroMemory(&info, sizeof(info));
+				if (MovePossible(row, col, dir, info))
+				{
+					if (info.isSameBitmap)
+					{
+						//메모리 해제해주기.
+						m_vecBlockList[row + col * BD_INFO::MAXY]->SetIsFusioned(true);
+						removeObserver(m_vecBlockList[info.row + info.col * BD_INFO::MAXY]);
+						SAFE_DELETE(m_vecBlockList[info.row + info.col * BD_INFO::MAXY]);
+
+						//비트맵 바꿔주기
+						int iBmpType = static_cast<int>(m_vecBlockList[row + col * BD_INFO::MAXY]->GetBitmapType());
+						e_BITMAP_TYPE eType = static_cast<e_BITMAP_TYPE>(iBmpType += 1);
+						m_vecBlockList[row + col * BD_INFO::MAXY]->SetBitmapType(eType);
+
+
+						//백보드 Rect세팅
+						m_vecBlockList[row + col * BD_INFO::MAXY]->SetMotherRect(
+							*m_vecRectBoard[info.row + info.col * BD_INFO::MAXY]
+						);
+						//보드판 정리.
+						auto pTmp = m_vecBlockList[row + col * BD_INFO::MAXY];
+						m_vecBlockList[info.row + info.col * BD_INFO::MAXY] = pTmp;
+						m_vecBlockList[row + col * BD_INFO::MAXY] = nullptr;
+					}
+					else
+					{
+						auto pTmp = m_vecBlockList[row + col * BD_INFO::MAXY];
+						pTmp->SetMotherRect(*m_vecRectBoard[info.row + info.col * BD_INFO::MAXY]);
+						m_vecBlockList[info.row + info.col * BD_INFO::MAXY] = pTmp;
+						m_vecBlockList[row + col * BD_INFO::MAXY] = nullptr;
+						//return true;
+					}
+				}
+
+			}
+		}
 		break;
 	case e_DIRECTION::DOWN:
 		//4행부터 먼저 계산.
+		for (int col = BD_INFO::BOARD_INDEX_X - 1; col >= 0; --col)
+		{
+			for (int row = 0; row < BD_INFO::BOARD_INDEX_X; ++row)
+			{
+				ZeroMemory(&info, sizeof(info));
+				if (MovePossible(row, col, dir, info))
+				{
+					if (info.isSameBitmap)
+					{
+						//메모리 해제해주기.
+						m_vecBlockList[row + col * BD_INFO::MAXY]->SetIsFusioned(true);
+						removeObserver(m_vecBlockList[info.row + info.col * BD_INFO::MAXY]);
+						SAFE_DELETE(m_vecBlockList[info.row + info.col * BD_INFO::MAXY]);
+
+						//비트맵 바꿔주기
+						int iBmpType = static_cast<int>(m_vecBlockList[row + col * BD_INFO::MAXY]->GetBitmapType());
+						e_BITMAP_TYPE eType = static_cast<e_BITMAP_TYPE>(iBmpType += 1);
+						m_vecBlockList[row + col * BD_INFO::MAXY]->SetBitmapType(eType);
+
+
+						//백보드 Rect세팅
+						m_vecBlockList[row + col * BD_INFO::MAXY]->SetMotherRect(
+							*m_vecRectBoard[info.row + info.col * BD_INFO::MAXY]
+						);
+						//보드판 정리.
+						auto pTmp = m_vecBlockList[row + col * BD_INFO::MAXY];
+						m_vecBlockList[info.row + info.col * BD_INFO::MAXY] = pTmp;
+						m_vecBlockList[row + col * BD_INFO::MAXY] = nullptr;
+					}
+					else
+					{
+						auto pTmp = m_vecBlockList[row + col * BD_INFO::MAXY];
+						pTmp->SetMotherRect(*m_vecRectBoard[info.row + info.col * BD_INFO::MAXY]);
+						m_vecBlockList[info.row + info.col * BD_INFO::MAXY] = pTmp;
+						m_vecBlockList[row + col * BD_INFO::MAXY] = nullptr;
+						//return true;
+					}
+				}
+
+			}
+		}
 		break;
 	case e_DIRECTION::STOP:
 		break;
@@ -133,48 +268,54 @@ bool CNewBoard::CalcBlockMove(e_DIRECTION dir)
 	}
 	return true;
 }
-bool CNewBoard::MovePossible(int row, int col, OUT int& rowOut, OUT int& colOut, e_DIRECTION eDir,OUT bool &bSameBmpType)
+bool CNewBoard::MovePossible(int row, int col,e_DIRECTION eDir,OUT ChangeBlockInfo& info)
 {
-	if (BIGOREQUALTHANZERO_SMALLTHENY(row,name_BOARD_ARR_INFO::BOARD_INDEX_X) &&
-		BIGOREQUALTHANZERO_SMALLTHENY(col, name_BOARD_ARR_INFO::BOARD_INDEX_Y))
+	if (BIGOREQUALTHANZERO_SMALLTHENY(row,BD_INFO::BOARD_INDEX_X) &&
+		BIGOREQUALTHANZERO_SMALLTHENY(col, BD_INFO::MAXY))
 		return false;
-	if (m_vecBlockList[row + col * name_BOARD_ARR_INFO::BOARD_INDEX_Y] == nullptr)
+	if (m_vecBlockList[row + col * BD_INFO::MAXY] == nullptr)
 		return false;
-	rowOut = row;
-	colOut = col;
+	info.row = row;
+	info.col = col;
 	switch (eDir)
 	{
 	case e_DIRECTION::LEFT:
 	{
-		for (int i = row; i >= 0; --i)
+		for (int i = row-1; i >= 0; --i)
 		{
 			if (m_vecBlockList[i + col * 4] == nullptr)
-				rowOut = i;
+				info.row = i;
 			else
-			{
-				if (EqualBitmapType(m_vecBlockList[i + col * 4],
-					m_vecBlockList[row + col * 4]))
+				if (EqualBitmapType(m_vecBlockList[i + col * 4],m_vecBlockList[row + col * 4]) 
+					&& !(m_vecBlockList[row + col * 4]->GetIsFusioned()) 
+					&& !(m_vecBlockList[i + col * 4]->GetIsFusioned()))
 				{
-					rowOut -= 1;
-					bSameBmpType = true;
+					info.row -= 1;
+					info.row = info.row;
+					info.col = col;
+					info.isSameBitmap = true;
+					break;
 				}
-			}
 		}
 	}
 		break;
 	case e_DIRECTION::RIGHT:
 	{
-		for (int i = row; i < name_BOARD_ARR_INFO::BOARD_INDEX_X; ++i)
+		for (int i = row+1; i < BD_INFO::BOARD_INDEX_X; ++i)
 		{
 			if (m_vecBlockList[i + col * 4] == nullptr)
-				rowOut = i;
+				info.row = i;
 			else
 			{
-				if (EqualBitmapType(m_vecBlockList[i + col * 4],
-					m_vecBlockList[row + col * 4]))
+				if (EqualBitmapType(m_vecBlockList[i + col * 4],m_vecBlockList[row + col * 4])
+					&& !(m_vecBlockList[row + col * 4]->GetIsFusioned()) 
+					&&	!(m_vecBlockList[i + col * 4]->GetIsFusioned()))
 				{
-					rowOut += 1;
-					bSameBmpType = true;
+					info.row += 1;
+					info.row = info.row;
+					info.col = col;
+					info.isSameBitmap = true;
+					break;
 				}
 				
 			}
@@ -183,17 +324,20 @@ bool CNewBoard::MovePossible(int row, int col, OUT int& rowOut, OUT int& colOut,
 		break;
 	case e_DIRECTION::UP:
 	{
-		for (int i = col; i >= 0; --i)
+		for (int i = col-1; i >= 0; --i)
 		{
 			if (m_vecBlockList[row + i * 4] == nullptr)
-				colOut = i;
+				info.col = i;
 			else
 			{
-				if (EqualBitmapType(m_vecBlockList[row + i * 4],
-					m_vecBlockList[row + col * 4]))
+				if (EqualBitmapType(m_vecBlockList[row + i * 4],m_vecBlockList[row + col * 4]) 
+					&&!(m_vecBlockList[row + i * 4]->GetIsFusioned())
+					&&!(m_vecBlockList[row + col * 4]->GetIsFusioned()))
 				{
-					colOut -= 1;
-					bSameBmpType = true;
+					info.col -= 1;
+					info.row = row;
+					info.col = info.col;
+					info.isSameBitmap = true;
 				}
 
 			}
@@ -202,19 +346,22 @@ bool CNewBoard::MovePossible(int row, int col, OUT int& rowOut, OUT int& colOut,
 		break;
 	case e_DIRECTION::DOWN:
 	{
-		for (int i = col; i < name_BOARD_ARR_INFO::BOARD_INDEX_X; ++i)
+		for (int i = col+1; i < BD_INFO::BOARD_INDEX_X; ++i)
 		{
 			if (m_vecBlockList[row + i * 4] == nullptr)
-				colOut = i;
+				info.col = i;
 			else
 			{
-				if (EqualBitmapType(m_vecBlockList[row + i * 4],
-					m_vecBlockList[row + col * 4]))
+				if (EqualBitmapType(m_vecBlockList[row + i * 4],m_vecBlockList[row + col * 4]) 
+					&& !(m_vecBlockList[row + i * 4]->GetIsFusioned()) 
+					&& !(m_vecBlockList[row + col * 4]->GetIsFusioned()))
 				{
-					colOut += 1;
-					bSameBmpType = true;
+					info.col += 1;
+					info.row = row;
+					info.col = info.col;
+					info.isSameBitmap = true;
+					
 				}
-
 			}
 		}
 	}
@@ -224,14 +371,19 @@ bool CNewBoard::MovePossible(int row, int col, OUT int& rowOut, OUT int& colOut,
 	default:
 		break;
 	}
+
+	if (row == info.row && col == info.col)
+		return false;
 	return true;
 }
 bool CNewBoard::EqualBitmapType(CNewBlock* blc1, CNewBlock* blc2)
 {
 	e_BITMAP_TYPE eBTypeDest = blc1->GetBitmapType();
 	e_BITMAP_TYPE eBTypeSrc = blc2->GetBitmapType();
-	return eBTypeDest == eBTypeSrc ? true : false;
+	return eBTypeDest == eBTypeSrc;
 }
+
+
 bool CNewBoard::MakeBlock()
 {
 	int iCountBlock = 0;
@@ -244,19 +396,34 @@ bool CNewBoard::MakeBlock()
 		return false;
 	while (1)
 	{
-		int row = rand() % name_BOARD_ARR_INFO::BOARD_INDEX_X;
-		int col = rand() % name_BOARD_ARR_INFO::BOARD_INDEX_Y;
+		int row = rand() % (BD_INFO::BOARD_INDEX_X);
+		int col = rand() % (BD_INFO::MAXY);
 		bool bExist = CheckBlockByIdx(row, col);
 		if (bExist)
 			continue;
 		else
 		{
-			m_vecBlockList[row + col * name_BOARD_ARR_INFO::BOARD_INDEX_X] =
-				new CNewBlock(*m_vecRectBoard[row + col * name_BOARD_ARR_INFO::BOARD_INDEX_X]);
+			CNewBlock* pTmpBlock = new CNewBlock(*m_vecRectBoard[row + col * BD_INFO::BOARD_INDEX_X]);
+			m_vecBlockList[row + col * BD_INFO::BOARD_INDEX_X] = pTmpBlock;
+			AddObserver(pTmpBlock);
 			break;
 		}
 	}
-	
+	return true;
+}
+bool CNewBoard::CheckAllBlockStop()
+{
+	for (int i = 0; i < m_vecBlockList.size(); ++i)
+	{
+		if (m_vecBlockList[i] != nullptr)
+		{
+			bool bTmp = m_vecBlockList[i]->GetisMoving();
+			if (bTmp)
+				return false;
+		}
+	}
+
+	return true;
 }
 //
 //void CNewBoard::BlockMoveTo(int x, int y, CVector2 pos)

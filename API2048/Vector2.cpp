@@ -57,7 +57,7 @@ CVector2 CVector2::Lerp(CVector2 v1, CVector2 v2, float t)
 bool CVector2::operator==(const CVector2& v1) const
 {
 
-	return x == v1.x && y == v1.y;
+	return fabs(x - v1.x) < 0.1f && fabs(y - v1.y) < 0.1f;
 }
 
 bool CVector2::operator!=(const CVector2& v1) const

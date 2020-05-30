@@ -80,6 +80,7 @@
     <ClCompile Include="Board.cpp" />
     <ClCompile Include="CNewBlock.cpp" />
     <ClCompile Include="CNewBoard.cpp" />
+    <ClCompile Include="CYHObserver.cpp" />
     <ClCompile Include="CYHTime.cpp" />
     <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="Mouse.cpp" />
@@ -92,6 +93,7 @@
     <ClInclude Include="Board.h" />
     <ClInclude Include="CNewBlock.h" />
     <ClInclude Include="CNewBoard.h" />
+    <ClInclude Include="CYHObserver.h" />
     <ClInclude Include="CYHTime.h" />
     <ClInclude Include="define.h" />
     <ClInclude Include="enum.h" />

@@ -1,14 +1,15 @@
 #include "CNewBlock.h"
 #include"define.h"
 #include"resource.h"
+#include"CNewBoard.h"
 HBITMAP CNewBlock::m_bitmap[11] = { NULL };
 
 
-CNewBlock::CNewBlock(CRectangle& vec) :
-	m_iBitmapType(e_BITMAP_TYPE::TYPE1),
-	m_poPostion(vec.GetPosition()),
-	m_eDirection(e_DIRECTION::STOP),
-	m_motherRect(vec)
+CNewBlock::CNewBlock(CRectangle& vec):
+m_iBitmapType(e_BITMAP_TYPE::TYPE1),
+m_poPostion(vec.GetPosition()),
+m_eDirection(e_DIRECTION::STOP),
+m_motherRect(vec)
 {
 	InitBitMap();
 }
@@ -20,7 +21,6 @@ CNewBlock::~CNewBlock()
 bool CNewBlock::InitBitMap()
 {
 	if (m_bitmap[0] == NULL)
-	{
 		for (int j = 0, i = IDB_BITMAP1; i < IDB_BITMAP11; ++i, ++j)
 		{
 			m_bitmap[j] = LoadBitmap(g_hInst, MAKEINTRESOURCE(i));
@@ -30,8 +30,6 @@ bool CNewBlock::InitBitMap()
 				return false;
 			}
 		}
-	}
-
 	return true;
 }
 
@@ -51,10 +49,48 @@ void CNewBlock::Render(HDC hdc)
 
 void CNewBlock::Update()
 {
-		MoveTo();
+	if (isMoving)
+	{
+		isMoving = MoveTo();
+	}
 }
 
-void CNewBlock::MoveTo()
+bool CNewBlock::MoveTo()
 {
-	m_poPostion = CVector2::Lerp(m_poPostion, m_motherRect.GetPosition(), g_timer.GetDeltaTime().count());
+	if (m_poPostion == m_motherRect.GetPosition())
+		return false;
+	m_poPostion = CVector2::Lerp(m_poPostion, m_motherRect.GetPosition(),0.01f);
+	
+	return true;
+}
+
+void CNewBlock::DeleteBmpFile()
+{
+	for (int j = 0; j < IDB_BITMAP11- IDB_BITMAP1;  ++j)
+	{
+		DeleteObject(m_bitmap[j]);
+	}
+}
+
+void CNewBlock::onNotify(e_Event event)
+{
+	switch (event)
+	{
+	case e_Event::BLOCK_STOP:
+		isMoving = false;
+		break;
+	case e_Event::BLOCK_MOVE:
+		isMoving = true;
+		isFusioned = false;
+		break;
+	case e_Event::BMP_LEVELUP:
+	{
+		e_BITMAP_TYPE type = GetBitmapType();
+		int iTmp = static_cast<int>(type) + 1;
+		m_iBitmapType = static_cast<e_BITMAP_TYPE>(iTmp);
+	}
+		break;
+	default:
+		break;
+	}
 }
