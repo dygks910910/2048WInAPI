@@ -20,6 +20,9 @@ public:
 private:
 	CNewBoard* m_pBoard;
 	CMouse* m_pMouse;
+
+	HDC m_memBackdc, m_BackgroundDC;
+	HBITMAP m_oldbmp, m_oldbmp2, m_hbmp, m_hbmpBack;
 private:
 	e_BITMAP_TYPE m_iHighType;
 public:

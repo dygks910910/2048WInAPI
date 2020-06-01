@@ -8,13 +8,11 @@
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 HINSTANCE g_hInst;
 LPSTR lpszClass = "2048";
-HDC hdc,memdc,mem2dc;
-PAINTSTRUCT ps;
-HBITMAP oldbmp,oldbmp2,hbmp,hbmpBack;
-CGameManager* gameManager; 
+HDC g_hdc;
+CGameManager* g_pGameManager; 
 e_BITMAP_TYPE destScore = e_BITMAP_TYPE::TYPE11;
 bool bDone = false;
-CYHTime* g_timer;
+CYHTime* g_pTimer;
 double g_dElapsedTime = 0;
 int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance
 	, LPSTR lpszCmdParam, int nCmdShow)
@@ -36,7 +34,6 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance
 	WndClass.lpszMenuName = MAKEINTRESOURCE(IDR_MENU1);
 	WndClass.style = CS_HREDRAW | CS_VREDRAW;
 	RegisterClass(&WndClass);
-	gameManager = new CGameManager();
 
 	hWnd = CreateWindow(lpszClass, lpszClass, WS_OVERLAPPEDWINDOW,
 		0, 0, name_CLIENT_SIZE::CLIENT_SIZE_WIDTH, name_CLIENT_SIZE::CLIENT_SIZE_HEIGHT,
@@ -50,18 +47,23 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance
 			DispatchMessage(&Message);
 	}*/
 
-	g_timer = new CYHTime;
+	g_pTimer = new CYHTime;
 	bool bDone = false;
+	g_hdc = GetDC(hWnd);
+	g_pGameManager = new CGameManager();
+
 	while (!bDone)
 	{
-		g_timer->StartTimer();
-		if(PeekMessage(&Message, hWnd, 0, 0, PM_REMOVE))
+		g_pTimer->StartTimer();
+		if(PeekMessage(&Message, 0, 0, 0, PM_REMOVE))
 		{
 			if (Message.message == WM_QUIT)
 
 			{
 				bDone = true;
-				delete gameManager;
+				SAFE_DELETE(g_pGameManager);
+				SAFE_DELETE(g_pTimer);
+				break;
 
 			}
 			else
@@ -72,12 +74,13 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance
 		}
 		else
 		{
-			gameManager->update();
+			g_pGameManager->update();
+			g_pGameManager->render(g_hdc);
 		}
 		InvalidateRect(hWnd, NULL, false);
 		UpdateWindow(hWnd);
-		g_timer->EndTimer();
-		g_dElapsedTime += g_timer->GetDeltaTime();
+		g_pTimer->EndTimer();
+		g_dElapsedTime += g_pTimer->GetDeltaTime();
 	}
 	//return Message.wParam;
 }
@@ -87,17 +90,12 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 {
 	int answear = 0;
 	switch (iMessage) {
-	case WM_CREATE:
-		//gameManager = new CGameManager(g_hInst);
-		hbmpBack = LoadBitmap(g_hInst, MAKEINTRESOURCE(IDB_BITMAP13));
-		//SetTimer(hWnd, 1, 0, nullptr);
-		break;
 	case WM_LBUTTONDOWN:
 	case WM_LBUTTONUP:
-		gameManager->setMouseDirection(iMessage, LOWORD(lParam), HIWORD(lParam));
+		g_pGameManager->setMouseDirection(iMessage, LOWORD(lParam), HIWORD(lParam));
 		//if (iMessage == WM_LBUTTONUP)
 		//InvalidateRect(hWnd, nullptr, true);
-		if (destScore == gameManager->getHighType())
+		if (destScore == g_pGameManager->getHighType())
 		{
 			MessageBox(hWnd, "목표달성", "목표달성!종료합니다.", MB_OK);
 			PostQuitMessage(0);
@@ -107,17 +105,13 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 		switch (wParam)
 		{
 		case ID_GAME_NEWGAME:
-			delete gameManager;
-			gameManager = new CGameManager();
+			SAFE_DELETE(g_pGameManager);
+			g_pGameManager = new CGameManager();
 			break;
 		case ID_GAME_EXIT:
 			answear = MessageBox(hWnd, "종료하시겠습니까?", "종료", MB_OKCANCEL);
 			if (answear == IDOK)
-			{
 				PostQuitMessage(0);
-				delete gameManager;
-
-			}
 			break;
 		case ID_DESTINATION_256:
 			destScore = e_BITMAP_TYPE::TYPE8;
@@ -132,40 +126,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 			destScore = e_BITMAP_TYPE::TYPE11;
 			break;
 		}
-	case WM_TIMER:
-		/*gameManager->timer();
-		InvalidateRect(hWnd, nullptr, false);*/
-		break;
-	case WM_PAINT:
-		hdc = BeginPaint(hWnd, &ps);
-		if (hbmp == NULL)
-		{
-			hbmp = CreateCompatibleBitmap(hdc, name_CLIENT_SIZE::CLIENT_SIZE_WIDTH, name_CLIENT_SIZE::CLIENT_SIZE_HEIGHT);
-		}
-		memdc = CreateCompatibleDC(hdc);
-		mem2dc = CreateCompatibleDC(memdc);
-
-		oldbmp = (HBITMAP)SelectObject(memdc, hbmp);
-		oldbmp2 = (HBITMAP)SelectObject(mem2dc, hbmpBack);
-		
-		
-		StretchBlt(memdc, 0, 0, name_CLIENT_SIZE::CLIENT_SIZE_WIDTH, name_CLIENT_SIZE::CLIENT_SIZE_HEIGHT, mem2dc, 0, 0, 237, 167, SRCCOPY);
-		gameManager->render(memdc);
-		
-		
-		BitBlt(hdc, 0, 0, 600, 600, memdc, 0, 0, SRCCOPY);
-		
-		
-		SelectObject(mem2dc, oldbmp2);
-		DeleteDC(mem2dc);
-		SelectObject(memdc, oldbmp);
-		DeleteDC(memdc);
-		
-		EndPaint(hWnd, &ps);
-		break;
 	case WM_DESTROY:
 		_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 		PostQuitMessage(0);
+		//SendMessage(hWnd, WM_QUIT, 0, 0);
 		return 0;
 	}
 	return(DefWindowProc(hWnd, iMessage, wParam, lParam));
