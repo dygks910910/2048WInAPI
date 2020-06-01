@@ -44,7 +44,8 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance
 	ShowWindow(hWnd, nCmdShow);
 
 
-	/*while (GetMessage(&Message,hWnd, 0, 0))	{
+	/*while (GetMessage(&Message,hWnd, 0, 0))
+	{
 			TranslateMessage(&Message);
 			DispatchMessage(&Message);
 	}*/
@@ -88,7 +89,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 	switch (iMessage) {
 	case WM_CREATE:
 		//gameManager = new CGameManager(g_hInst);
-		hbmpBack = LoadBitmap(g_hInst, MAKEINTRESOURCE(IDB_BITMAP12));
+		hbmpBack = LoadBitmap(g_hInst, MAKEINTRESOURCE(IDB_BITMAP13));
 		//SetTimer(hWnd, 1, 0, nullptr);
 		break;
 	case WM_LBUTTONDOWN:
@@ -148,7 +149,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 		oldbmp2 = (HBITMAP)SelectObject(mem2dc, hbmpBack);
 		
 		
-		StretchBlt(memdc, 0, 0, name_CLIENT_SIZE::CLIENT_SIZE_WIDTH, name_CLIENT_SIZE::CLIENT_SIZE_HEIGHT, mem2dc, 0, 0, 320, 479, SRCCOPY);
+		StretchBlt(memdc, 0, 0, name_CLIENT_SIZE::CLIENT_SIZE_WIDTH, name_CLIENT_SIZE::CLIENT_SIZE_HEIGHT, mem2dc, 0, 0, 237, 167, SRCCOPY);
 		gameManager->render(memdc);
 		
 		

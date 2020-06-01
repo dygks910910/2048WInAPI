@@ -1,6 +1,1 @@
-﻿  소스.cpp
-D:\Projects\2048\API2048\Block.h(36,64): warning C4244: '=': 'const int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-D:\Projects\2048\API2048\Block.h(36,83): warning C4244: '=': 'const int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-D:\Projects\2048\API2048\Rectangle.h(15,65): warning C4244: '=': 'const int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-D:\Projects\2048\API2048\Rectangle.h(15,85): warning C4244: '=': 'const int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-  API2048.vcxproj -> D:\Projects\2048\Debug\API2048.exe
+﻿  API2048.vcxproj -> D:\Projects\2048\Debug\API2048.exe

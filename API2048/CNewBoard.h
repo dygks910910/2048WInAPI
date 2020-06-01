@@ -34,8 +34,9 @@ private:
 	bool EqualBitmapType(CNewBlock* blc1, CNewBlock* blc2);
 	template<class T>
 	void Swap(T a, T b);
-
-
+	bool CheckFusionPossible(CNewBlock* block1, CNewBlock* block2);
+	bool FusionBlock(int row, int col, const ChangeBlockInfo& info);
+	void MoveBlock(int row, int col, const ChangeBlockInfo& info);
 	// CYHObserver을(를) 통해 상속됨
 
 };

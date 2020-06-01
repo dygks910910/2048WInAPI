@@ -76,8 +76,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Block.cpp" />
-    <ClCompile Include="Board.cpp" />
     <ClCompile Include="CNewBlock.cpp" />
     <ClCompile Include="CNewBoard.cpp" />
     <ClCompile Include="CYHObserver.cpp" />
@@ -89,8 +87,6 @@
     <ClCompile Include="소스.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Block.h" />
-    <ClInclude Include="Board.h" />
     <ClInclude Include="CNewBlock.h" />
     <ClInclude Include="CNewBoard.h" />
     <ClInclude Include="CYHObserver.h" />
@@ -109,6 +105,7 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\..\..\..\..\Pictures\bitmap\풍선.bmp" />
+    <Image Include="back.bmp" />
     <Image Include="bitmap1.bmp" />
     <Image Include="bitmap10.bmp" />
     <Image Include="bitmap11.bmp" />

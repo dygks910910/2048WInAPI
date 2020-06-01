@@ -1,0 +1,75 @@
+﻿  CNewBlock.cpp
+D:\Projects\2048\API2048\Rectangle.h(12,65): warning C4244: '=': 'const int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\Projects\2048\API2048\Rectangle.h(12,85): warning C4244: '=': 'const int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\Projects\2048\API2048\CNewBlock.cpp(29,72): error C2664: 'int MessageBoxW(HWND,LPCWSTR,LPCWSTR,UINT)': 인수 2을(를) 'const char [16]'에서 'LPCWSTR'(으)로 변환할 수 없습니다.
+D:\Projects\2048\API2048\CNewBlock.cpp(29,19): message : 가리킨 형식이 관련이 없습니다. 변환하려면 reinterpret_cast, C 스타일 캐스트 또는 함수 스타일 캐스트가 필요합니다.
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\um\winuser.h(9153,1): message : 'MessageBoxW' 선언을 참조하십시오.
+D:\Projects\2048\API2048\CNewBlock.cpp(43,50): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\Projects\2048\API2048\CNewBlock.cpp(42,65): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  CNewBoard.cpp
+D:\Projects\2048\API2048\Rectangle.h(12,65): warning C4244: '=': 'const int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\Projects\2048\API2048\Rectangle.h(12,85): warning C4244: '=': 'const int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\Projects\2048\API2048\CNewBoard.cpp(11,49): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\Projects\2048\API2048\CNewBoard.cpp(12,49): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\Projects\2048\API2048\CNewBoard.cpp(23,20): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+D:\Projects\2048\API2048\CNewBoard.cpp(27,20): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+D:\Projects\2048\API2048\CNewBoard.cpp(36,20): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+D:\Projects\2048\API2048\CNewBoard.cpp(40,20): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+D:\Projects\2048\API2048\CNewBoard.cpp(70,20): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+D:\Projects\2048\API2048\CNewBoard.cpp(351,20): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+  CYHObserver.cpp
+D:\Projects\2048\API2048\CYHObserver.cpp(17,20): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+  CYHTime.cpp
+  GameManager.cpp
+D:\Projects\2048\API2048\Rectangle.h(12,65): warning C4244: '=': 'const int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\Projects\2048\API2048\Rectangle.h(12,85): warning C4244: '=': 'const int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\Projects\2048\API2048\GameManager.cpp(6,12): warning C4244: '인수': 'time_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\Projects\2048\API2048\GameManager.cpp(24,7): warning C4244: '인수': 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\Projects\2048\API2048\GameManager.cpp(25,42): error C2664: 'BOOL TextOutW(HDC,int,int,LPCWSTR,int)': 인수 4을(를) 'char [20]'에서 'LPCWSTR'(으)로 변환할 수 없습니다.
+D:\Projects\2048\API2048\GameManager.cpp(25,22): message : 가리킨 형식이 관련이 없습니다. 변환하려면 reinterpret_cast, C 스타일 캐스트 또는 함수 스타일 캐스트가 필요합니다.
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\um\wingdi.h(5101,25): message : 'TextOutW' 선언을 참조하십시오.
+D:\Projects\2048\API2048\GameManager.cpp(27,46): error C2664: 'BOOL TextOutW(HDC,int,int,LPCWSTR,int)': 인수 4을(를) 'const char [6]'에서 'LPCWSTR'(으)로 변환할 수 없습니다.
+D:\Projects\2048\API2048\GameManager.cpp(27,22): message : 가리킨 형식이 관련이 없습니다. 변환하려면 reinterpret_cast, C 스타일 캐스트 또는 함수 스타일 캐스트가 필요합니다.
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\um\wingdi.h(5101,25): message : 'TextOutW' 선언을 참조하십시오.
+D:\Projects\2048\API2048\GameManager.cpp(29,44): error C2664: 'BOOL TextOutW(HDC,int,int,LPCWSTR,int)': 인수 4을(를) 'const char [5]'에서 'LPCWSTR'(으)로 변환할 수 없습니다.
+D:\Projects\2048\API2048\GameManager.cpp(29,22): message : 가리킨 형식이 관련이 없습니다. 변환하려면 reinterpret_cast, C 스타일 캐스트 또는 함수 스타일 캐스트가 필요합니다.
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\um\wingdi.h(5101,25): message : 'TextOutW' 선언을 참조하십시오.
+D:\Projects\2048\API2048\GameManager.cpp(31,40): error C2664: 'BOOL TextOutW(HDC,int,int,LPCWSTR,int)': 인수 4을(를) 'const char [3]'에서 'LPCWSTR'(으)로 변환할 수 없습니다.
+D:\Projects\2048\API2048\GameManager.cpp(31,22): message : 가리킨 형식이 관련이 없습니다. 변환하려면 reinterpret_cast, C 스타일 캐스트 또는 함수 스타일 캐스트가 필요합니다.
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\um\wingdi.h(5101,25): message : 'TextOutW' 선언을 참조하십시오.
+D:\Projects\2048\API2048\GameManager.cpp(33,44): error C2664: 'BOOL TextOutW(HDC,int,int,LPCWSTR,int)': 인수 4을(를) 'const char [5]'에서 'LPCWSTR'(으)로 변환할 수 없습니다.
+D:\Projects\2048\API2048\GameManager.cpp(33,22): message : 가리킨 형식이 관련이 없습니다. 변환하려면 reinterpret_cast, C 스타일 캐스트 또는 함수 스타일 캐스트가 필요합니다.
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\um\wingdi.h(5101,25): message : 'TextOutW' 선언을 참조하십시오.
+D:\Projects\2048\API2048\GameManager.cpp(35,44): error C2664: 'BOOL TextOutW(HDC,int,int,LPCWSTR,int)': 인수 4을(를) 'const char [5]'에서 'LPCWSTR'(으)로 변환할 수 없습니다.
+D:\Projects\2048\API2048\GameManager.cpp(35,22): message : 가리킨 형식이 관련이 없습니다. 변환하려면 reinterpret_cast, C 스타일 캐스트 또는 함수 스타일 캐스트가 필요합니다.
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\um\wingdi.h(5101,25): message : 'TextOutW' 선언을 참조하십시오.
+D:\Projects\2048\API2048\GameManager.cpp(24,2): warning C4996: 'itoa': The POSIX name for this item is deprecated. Instead, use the ISO C and C++ conformant name: _itoa. See online help for details.
+  Mouse.cpp
+D:\Projects\2048\API2048\Mouse.cpp(16,42): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\Projects\2048\API2048\Mouse.cpp(16,31): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\Projects\2048\API2048\Mouse.cpp(17,38): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\Projects\2048\API2048\Mouse.cpp(17,29): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  Rectangle.cpp
+D:\Projects\2048\API2048\Rectangle.h(12,65): warning C4244: '=': 'const int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\Projects\2048\API2048\Rectangle.h(12,85): warning C4244: '=': 'const int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\Projects\2048\API2048\Rectangle.cpp(19,47): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\Projects\2048\API2048\Rectangle.cpp(19,18): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\Projects\2048\API2048\Rectangle.cpp(18,61): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\Projects\2048\API2048\Rectangle.cpp(18,32): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  Vector2.cpp
+D:\Projects\2048\API2048\Vector2.cpp(27,10): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\Projects\2048\API2048\Vector2.cpp(28,10): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  소스.cpp
+D:\Projects\2048\API2048\Rectangle.h(12,65): warning C4244: '=': 'const int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\Projects\2048\API2048\Rectangle.h(12,85): warning C4244: '=': 'const int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\Projects\2048\API2048\소스.cpp(35,36): error C2440: '=': 'LPSTR'에서 'LPCWSTR'(으)로 변환할 수 없습니다.
+D:\Projects\2048\API2048\소스.cpp(35,27): message : 가리킨 형식이 관련이 없습니다. 변환하려면 reinterpret_cast, C 스타일 캐스트 또는 함수 스타일 캐스트가 필요합니다.
+D:\Projects\2048\API2048\소스.cpp(41,1): error C2664: 'HWND CreateWindowExW(DWORD,LPCWSTR,LPCWSTR,DWORD,int,int,int,int,HWND,HMENU,HINSTANCE,LPVOID)': 인수 2을(를) 'LPSTR'에서 'LPCWSTR'(으)로 변환할 수 없습니다.
+D:\Projects\2048\API2048\소스.cpp(41,1): message : 가리킨 형식이 관련이 없습니다. 변환하려면 reinterpret_cast, C 스타일 캐스트 또는 함수 스타일 캐스트가 필요합니다.
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\um\winuser.h(4436,1): message : 'CreateWindowExW' 선언을 참조하십시오.
+D:\Projects\2048\API2048\소스.cpp(102,75): error C2664: 'int MessageBoxW(HWND,LPCWSTR,LPCWSTR,UINT)': 인수 2을(를) 'const char [9]'에서 'LPCWSTR'(으)로 변환할 수 없습니다.
+D:\Projects\2048\API2048\소스.cpp(102,21): message : 가리킨 형식이 관련이 없습니다. 변환하려면 reinterpret_cast, C 스타일 캐스트 또는 함수 스타일 캐스트가 필요합니다.
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\um\winuser.h(9153,1): message : 'MessageBoxW' 선언을 참조하십시오.
+D:\Projects\2048\API2048\소스.cpp(114,81): error C2664: 'int MessageBoxW(HWND,LPCWSTR,LPCWSTR,UINT)': 인수 2을(를) 'const char [18]'에서 'LPCWSTR'(으)로 변환할 수 없습니다.
+D:\Projects\2048\API2048\소스.cpp(114,31): message : 가리킨 형식이 관련이 없습니다. 변환하려면 reinterpret_cast, C 스타일 캐스트 또는 함수 스타일 캐스트가 필요합니다.
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\um\winuser.h(9153,1): message : 'MessageBoxW' 선언을 참조하십시오.

@@ -20,8 +20,6 @@ CGameManager::~CGameManager()
 void CGameManager::render(HDC hdc)
 {
 	m_pBoard->Render(hdc);
-	
-
 	char cTime[20];
 	itoa(g_dElapsedTime,cTime, 10);
 	TextOut(hdc, 0, 20, cTime, strlen(cTime));
@@ -35,14 +33,6 @@ void CGameManager::render(HDC hdc)
 		TextOut(hdc, 0, 0, "DOWN", strlen("DOWN"));
 	if (m_pMouse->getDirection() == e_DIRECTION::STOP)
 		TextOut(hdc, 0, 0, "STOP", strlen("STOP"));
-
-}
-
-void CGameManager::progress()
-{
-	/*if (m_pMouse->getDirection() == e_DIRECTION::STOP)
-		return;
-	checkInBoardBlock();*/
 }
 
 
@@ -83,5 +73,4 @@ void CGameManager::update()
 			m_pMouse->setDIrec(e_DIRECTION::STOP);
 		}
 	}
-
 }

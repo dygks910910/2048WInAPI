@@ -42,12 +42,14 @@ void CNewBoard::Render(HDC hdc)
 		if(m_vecBlockList[i] != nullptr)
 			m_vecBlockList[i]->Render(hdc);
 	}
-	RECT a, b;
+
+#ifdef _DEBUG
+	/*RECT a, b;
 	for (int iCol = 0; iCol < 4; ++iCol)
 	{
 		for (int iRow = 0; iRow < 4; ++iRow)
 		{
-			a.left = 400 + iRow *15;
+			a.left = 400 + iRow * 15;
 			a.top = 100 + iCol * 15;
 
 			b.left = 400 + iRow * 15;
@@ -57,7 +59,8 @@ void CNewBoard::Render(HDC hdc)
 			TextOut(hdc, b.left, b.top, m_vecRectBoard[iRow + iCol * 4] == nullptr ? "0" : "1", 1);
 
 		}
-	}
+	}*/
+#endif // DEBUG
 }
 
 void CNewBoard::Update(e_DIRECTION eDir)
@@ -94,35 +97,9 @@ bool CNewBoard::CalcBlockMove(e_DIRECTION dir)
 				if (MovePossible(row, col, dir, info))
 				{
 					if (info.isSameBitmap)
-					{
-						//메모리 해제해주기.
-						m_vecBlockList[row + col * BD_INFO::MAXY]->SetIsFusioned(true);
-						removeObserver(m_vecBlockList[info.row + info.col * BD_INFO::MAXY]);
-						SAFE_DELETE(m_vecBlockList[info.row + info.col * BD_INFO::MAXY]);
-						
-						//비트맵 바꿔주기
-						int iBmpType = static_cast<int>(m_vecBlockList[row+ col* BD_INFO::MAXY]->GetBitmapType());
-						e_BITMAP_TYPE eType = static_cast<e_BITMAP_TYPE>(iBmpType += 1);
-						m_vecBlockList[row + col * BD_INFO::MAXY]->SetBitmapType(eType);
-						
-						
-						//백보드 Rect세팅
-						m_vecBlockList[row + col * BD_INFO::MAXY]->SetMotherRect(
-							*m_vecRectBoard[info.row + info.col * BD_INFO::MAXY]
-						);
-						//보드판 정리.
-						auto pTmp = m_vecBlockList[row + col * BD_INFO::MAXY];
-						m_vecBlockList[info.row + info.col * BD_INFO::MAXY] = pTmp;
-						m_vecBlockList[row + col * BD_INFO::MAXY] = nullptr;
-					}
+						FusionBlock(row, col, info);
 					else
-					{
-						auto pTmp = m_vecBlockList[row + col * BD_INFO::MAXY];
-						pTmp->SetMotherRect(*m_vecRectBoard[info.row + info.col * BD_INFO::MAXY]);
-						m_vecBlockList[info.row + info.col * BD_INFO::MAXY] = pTmp;
-						m_vecBlockList[row + col * BD_INFO::MAXY] = nullptr;
-						//return true;
-					}
+						MoveBlock(row, col, info);
 				}
 			}
 		}
@@ -138,38 +115,10 @@ bool CNewBoard::CalcBlockMove(e_DIRECTION dir)
 				if (MovePossible(row, col, dir, info))
 				{
 					if (info.isSameBitmap)
-					{
-						//메모리 해제해주기.
-						m_vecBlockList[row + col * BD_INFO::MAXY]->SetIsFusioned(true);
-						removeObserver(m_vecBlockList[info.row + info.col * BD_INFO::MAXY]);
-						SAFE_DELETE(m_vecBlockList[info.row + info.col * BD_INFO::MAXY]);
-
-						//비트맵 바꿔주기
-						int iBmpType = static_cast<int>(m_vecBlockList[row + col * BD_INFO::MAXY]->GetBitmapType());
-						e_BITMAP_TYPE eType = static_cast<e_BITMAP_TYPE>(iBmpType += 1);
-						m_vecBlockList[row + col * BD_INFO::MAXY]->SetBitmapType(eType);
-
-
-						//백보드 Rect세팅
-						m_vecBlockList[row + col * BD_INFO::MAXY]->SetMotherRect(
-							*m_vecRectBoard[info.row + info.col * BD_INFO::MAXY]
-						);
-						//보드판 정리.
-						auto pTmp = m_vecBlockList[row + col * BD_INFO::MAXY];
-						m_vecBlockList[info.row + info.col * BD_INFO::MAXY] = pTmp;
-						m_vecBlockList[row + col * BD_INFO::MAXY] = nullptr;
-					}
+						FusionBlock(row, col, info);
 					else
-					{
-						auto pTmp = m_vecBlockList[row + col * BD_INFO::MAXY];
-						pTmp->SetMotherRect(*m_vecRectBoard[info.row + info.col * BD_INFO::MAXY]);
-						m_vecBlockList[info.row + info.col * BD_INFO::MAXY] = pTmp;
-						m_vecBlockList[row + col * BD_INFO::MAXY] = nullptr;
-						//return true;
-					}
-
+						MoveBlock(row, col, info);
 				}
-				
 			}
 		}
 		break;
@@ -183,37 +132,10 @@ bool CNewBoard::CalcBlockMove(e_DIRECTION dir)
 				if (MovePossible(row, col, dir, info))
 				{
 					if (info.isSameBitmap)
-					{
-						//메모리 해제해주기.
-						m_vecBlockList[row + col * BD_INFO::MAXY]->SetIsFusioned(true);
-						removeObserver(m_vecBlockList[info.row + info.col * BD_INFO::MAXY]);
-						SAFE_DELETE(m_vecBlockList[info.row + info.col * BD_INFO::MAXY]);
-
-						//비트맵 바꿔주기
-						int iBmpType = static_cast<int>(m_vecBlockList[row + col * BD_INFO::MAXY]->GetBitmapType());
-						e_BITMAP_TYPE eType = static_cast<e_BITMAP_TYPE>(iBmpType += 1);
-						m_vecBlockList[row + col * BD_INFO::MAXY]->SetBitmapType(eType);
-
-
-						//백보드 Rect세팅
-						m_vecBlockList[row + col * BD_INFO::MAXY]->SetMotherRect(
-							*m_vecRectBoard[info.row + info.col * BD_INFO::MAXY]
-						);
-						//보드판 정리.
-						auto pTmp = m_vecBlockList[row + col * BD_INFO::MAXY];
-						m_vecBlockList[info.row + info.col * BD_INFO::MAXY] = pTmp;
-						m_vecBlockList[row + col * BD_INFO::MAXY] = nullptr;
-					}
+						FusionBlock(row, col, info);
 					else
-					{
-						auto pTmp = m_vecBlockList[row + col * BD_INFO::MAXY];
-						pTmp->SetMotherRect(*m_vecRectBoard[info.row + info.col * BD_INFO::MAXY]);
-						m_vecBlockList[info.row + info.col * BD_INFO::MAXY] = pTmp;
-						m_vecBlockList[row + col * BD_INFO::MAXY] = nullptr;
-						//return true;
-					}
+						MoveBlock(row, col, info);
 				}
-
 			}
 		}
 		break;
@@ -227,41 +149,12 @@ bool CNewBoard::CalcBlockMove(e_DIRECTION dir)
 				if (MovePossible(row, col, dir, info))
 				{
 					if (info.isSameBitmap)
-					{
-						//메모리 해제해주기.
-						m_vecBlockList[row + col * BD_INFO::MAXY]->SetIsFusioned(true);
-						removeObserver(m_vecBlockList[info.row + info.col * BD_INFO::MAXY]);
-						SAFE_DELETE(m_vecBlockList[info.row + info.col * BD_INFO::MAXY]);
-
-						//비트맵 바꿔주기
-						int iBmpType = static_cast<int>(m_vecBlockList[row + col * BD_INFO::MAXY]->GetBitmapType());
-						e_BITMAP_TYPE eType = static_cast<e_BITMAP_TYPE>(iBmpType += 1);
-						m_vecBlockList[row + col * BD_INFO::MAXY]->SetBitmapType(eType);
-
-
-						//백보드 Rect세팅
-						m_vecBlockList[row + col * BD_INFO::MAXY]->SetMotherRect(
-							*m_vecRectBoard[info.row + info.col * BD_INFO::MAXY]
-						);
-						//보드판 정리.
-						auto pTmp = m_vecBlockList[row + col * BD_INFO::MAXY];
-						m_vecBlockList[info.row + info.col * BD_INFO::MAXY] = pTmp;
-						m_vecBlockList[row + col * BD_INFO::MAXY] = nullptr;
-					}
+						FusionBlock(row, col, info);
 					else
-					{
-						auto pTmp = m_vecBlockList[row + col * BD_INFO::MAXY];
-						pTmp->SetMotherRect(*m_vecRectBoard[info.row + info.col * BD_INFO::MAXY]);
-						m_vecBlockList[info.row + info.col * BD_INFO::MAXY] = pTmp;
-						m_vecBlockList[row + col * BD_INFO::MAXY] = nullptr;
-						//return true;
-					}
+						MoveBlock(row, col, info);
 				}
-
 			}
 		}
-		break;
-	case e_DIRECTION::STOP:
 		break;
 	default:
 		break;
@@ -286,9 +179,7 @@ bool CNewBoard::MovePossible(int row, int col,e_DIRECTION eDir,OUT ChangeBlockIn
 			if (m_vecBlockList[i + col * 4] == nullptr)
 				info.row = i;
 			else
-				if (EqualBitmapType(m_vecBlockList[i + col * 4],m_vecBlockList[row + col * 4]) 
-					&& !(m_vecBlockList[row + col * 4]->GetIsFusioned()) 
-					&& !(m_vecBlockList[i + col * 4]->GetIsFusioned()))
+				if (CheckFusionPossible(m_vecBlockList[i + col * 4], m_vecBlockList[row + col * 4]))
 				{
 					info.row -= 1;
 					info.row = info.row;
@@ -296,6 +187,8 @@ bool CNewBoard::MovePossible(int row, int col,e_DIRECTION eDir,OUT ChangeBlockIn
 					info.isSameBitmap = true;
 					break;
 				}
+				else
+					break;
 		}
 	}
 		break;
@@ -307,9 +200,7 @@ bool CNewBoard::MovePossible(int row, int col,e_DIRECTION eDir,OUT ChangeBlockIn
 				info.row = i;
 			else
 			{
-				if (EqualBitmapType(m_vecBlockList[i + col * 4],m_vecBlockList[row + col * 4])
-					&& !(m_vecBlockList[row + col * 4]->GetIsFusioned()) 
-					&&	!(m_vecBlockList[i + col * 4]->GetIsFusioned()))
+				if (CheckFusionPossible(m_vecBlockList[i + col * 4], m_vecBlockList[row + col * 4]))
 				{
 					info.row += 1;
 					info.row = info.row;
@@ -317,7 +208,8 @@ bool CNewBoard::MovePossible(int row, int col,e_DIRECTION eDir,OUT ChangeBlockIn
 					info.isSameBitmap = true;
 					break;
 				}
-				
+				else
+					break;
 			}
 		}
 	}
@@ -330,15 +222,16 @@ bool CNewBoard::MovePossible(int row, int col,e_DIRECTION eDir,OUT ChangeBlockIn
 				info.col = i;
 			else
 			{
-				if (EqualBitmapType(m_vecBlockList[row + i * 4],m_vecBlockList[row + col * 4]) 
-					&&!(m_vecBlockList[row + i * 4]->GetIsFusioned())
-					&&!(m_vecBlockList[row + col * 4]->GetIsFusioned()))
+				if (CheckFusionPossible(m_vecBlockList[row + i * 4], m_vecBlockList[row + col * 4]))
 				{
 					info.col -= 1;
 					info.row = row;
 					info.col = info.col;
 					info.isSameBitmap = true;
+					break;
 				}
+				else
+					break;
 
 			}
 		}
@@ -352,16 +245,16 @@ bool CNewBoard::MovePossible(int row, int col,e_DIRECTION eDir,OUT ChangeBlockIn
 				info.col = i;
 			else
 			{
-				if (EqualBitmapType(m_vecBlockList[row + i * 4],m_vecBlockList[row + col * 4]) 
-					&& !(m_vecBlockList[row + i * 4]->GetIsFusioned()) 
-					&& !(m_vecBlockList[row + col * 4]->GetIsFusioned()))
+				if (CheckFusionPossible(m_vecBlockList[row + i * 4], m_vecBlockList[row + col * 4]))
 				{
 					info.col += 1;
 					info.row = row;
 					info.col = info.col;
 					info.isSameBitmap = true;
-					
+					break;
 				}
+				else
+					break;
 			}
 		}
 	}
@@ -381,6 +274,48 @@ bool CNewBoard::EqualBitmapType(CNewBlock* blc1, CNewBlock* blc2)
 	e_BITMAP_TYPE eBTypeDest = blc1->GetBitmapType();
 	e_BITMAP_TYPE eBTypeSrc = blc2->GetBitmapType();
 	return eBTypeDest == eBTypeSrc;
+}
+
+bool CNewBoard::CheckFusionPossible(CNewBlock* block1, CNewBlock* block2)
+{
+	if (EqualBitmapType(block1, block2)
+		&& !(block1->GetIsFusioned()) &&!( block2->GetIsFusioned()))
+	{
+		return true;
+	}
+	return false;
+}
+
+bool CNewBoard::FusionBlock(int row, int col, const ChangeBlockInfo& info)
+{
+	//메모리 해제해주기.
+	m_vecBlockList[row + col * BD_INFO::MAXY]->SetIsFusioned(true);
+	removeObserver(m_vecBlockList[info.row + info.col * BD_INFO::MAXY]);
+	SAFE_DELETE(m_vecBlockList[info.row + info.col * BD_INFO::MAXY]);
+
+	//비트맵 바꿔주기
+	int iBmpType = static_cast<int>(m_vecBlockList[row + col * BD_INFO::MAXY]->GetBitmapType());
+	e_BITMAP_TYPE eType = static_cast<e_BITMAP_TYPE>(iBmpType += 1);
+	m_vecBlockList[row + col * BD_INFO::MAXY]->SetBitmapType(eType);
+
+
+	//백보드 Rect세팅
+	m_vecBlockList[row + col * BD_INFO::MAXY]->SetMotherRect(
+		*m_vecRectBoard[info.row + info.col * BD_INFO::MAXY]
+	);
+	//보드판 정리.
+	auto pTmp = m_vecBlockList[row + col * BD_INFO::MAXY];
+	m_vecBlockList[info.row + info.col * BD_INFO::MAXY] = pTmp;
+	m_vecBlockList[row + col * BD_INFO::MAXY] = nullptr;
+	return false;
+}
+
+void CNewBoard::MoveBlock(int row, int col, const ChangeBlockInfo& info)
+{
+	auto pTmp = m_vecBlockList[row + col * BD_INFO::MAXY];
+	pTmp->SetMotherRect(*m_vecRectBoard[info.row + info.col * BD_INFO::MAXY]);
+	m_vecBlockList[info.row + info.col * BD_INFO::MAXY] = pTmp;
+	m_vecBlockList[row + col * BD_INFO::MAXY] = nullptr;
 }
 
 

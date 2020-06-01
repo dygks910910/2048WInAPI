@@ -39,9 +39,6 @@
     <ClCompile Include="소스.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Board.cpp">
-      <Filter>소스 파일\CBoard</Filter>
-    </ClCompile>
     <ClCompile Include="Rectangle.cpp">
       <Filter>소스 파일\CRect</Filter>
     </ClCompile>
@@ -50,9 +47,6 @@
     </ClCompile>
     <ClCompile Include="Mouse.cpp">
       <Filter>소스 파일\CMouse</Filter>
-    </ClCompile>
-    <ClCompile Include="Block.cpp">
-      <Filter>소스 파일\CBlock</Filter>
     </ClCompile>
     <ClCompile Include="Vector2.cpp">
       <Filter>소스 파일</Filter>
@@ -71,9 +65,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Board.h">
-      <Filter>소스 파일\CBoard</Filter>
-    </ClInclude>
     <ClInclude Include="define.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
@@ -91,9 +82,6 @@
     </ClInclude>
     <ClInclude Include="Mouse.h">
       <Filter>소스 파일\CMouse</Filter>
-    </ClInclude>
-    <ClInclude Include="Block.h">
-      <Filter>소스 파일\CBlock</Filter>
     </ClInclude>
     <ClInclude Include="inline.h">
       <Filter>헤더 파일</Filter>
@@ -157,6 +145,9 @@
       <Filter>리소스 파일</Filter>
     </Image>
     <Image Include="풍선.bmp">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="back.bmp">
       <Filter>리소스 파일</Filter>
     </Image>
   </ItemGroup>
